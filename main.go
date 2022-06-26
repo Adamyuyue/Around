@@ -32,7 +32,7 @@ const (
 	INDEX       = "around"
 	TYPE        = "post"
 	DISTANCE    = "200km"
-	ES_URL      = "http://35.225.143.91:9200"
+	ES_URL      = "http://35.232.122.250:9200"
 	BUCKET_NAME = "post-images-354300"
 )
 
@@ -112,6 +112,7 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 	// replace it with your real bucket name.
 	_, attrs, err := saveToGCS(ctx, file, BUCKET_NAME, id)
 	if err != nil {
+
 		http.Error(w, "GCS is not setup", http.StatusInternalServerError)
 		fmt.Printf("GCS is not setup %v\n", err)
 		return
@@ -128,6 +129,7 @@ func handlerPost(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Save an image to GCS.
 func saveToGCS(ctx context.Context, r io.Reader, bucketName, name string) (*storage.ObjectHandle, *storage.ObjectAttrs, error) {
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -157,7 +159,6 @@ func saveToGCS(ctx context.Context, r io.Reader, bucketName, name string) (*stor
 	attrs, err := obj.Attrs(ctx)
 	fmt.Printf("Post is saved to GCS: %s\n", attrs.MediaLink)
 	return obj, attrs, err
-
 }
 
 // Save a post to ElasticSearch
